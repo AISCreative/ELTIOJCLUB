@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>El Tio J · Catálogo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #050508; }
+    body { background: radial-gradient(circle at 70% 20%, #0f0f1a 0%, #020205 100%); display: flex; justify-content: center; align-items: center; padding: 12px; position: relative; }
+    body::before { content: "EL TIO J"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-12deg) scale(1.2); font-size: clamp(3rem, 15vw, 10rem); font-weight: 900; color: rgba(0, 255, 255, 0.04); white-space: nowrap; letter-spacing: 12px; text-transform: uppercase; pointer-events: none; z-index: 1; animation: floatLogo 20s infinite alternate ease-in-out; }
+    @keyframes floatLogo { 0% { transform: translate(-50%, -50%) rotate(-12deg) scale(1.2); opacity: 0.04; } 100% { transform: translate(-48%, -52%) rotate(-8deg) scale(1.25); opacity: 0.08; } }
+    .kiosco { width: 100%; max-width: 1280px; height: 100%; background: rgba(6, 6, 12, 0.85); backdrop-filter: blur(8px); border: 3px solid #00ffff; border-radius: 30px; box-shadow: 0 0 40px #00ffff, inset 0 0 20px rgba(0, 255, 255, 0.1); display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 10; animation: borderPulse 3s infinite; }
+    @keyframes borderPulse { 0%, 100% { border-color: #00ffff; box-shadow: 0 0 40px #00ffff; } 50% { border-color: #ff00ff; box-shadow: 0 0 60px #ff00ff; } }
+    .header { padding: 1.5rem 1.5rem 0.8rem; text-align: center; border-bottom: 2px solid #ff00ff; background: linear-gradient(180deg, rgba(255, 0, 255, 0.15) 0%, transparent 100%); }
+    .logo-masquehigh { font-size: 4.8rem; font-weight: 900; background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00, #00ff88); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 30px rgba(0, 255, 255, 0.5); line-height: 1.1; animation: rainbowShift 2s infinite; }
+    @keyframes rainbowShift { 0%, 100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(30deg); } }
+    .logo-club { font-size: 3.5rem; font-weight: 900; letter-spacing: 12px; background: linear-gradient(135deg, #ffff00, #ff00ff); -webkit-background-clip: text; background-clip: text; color: transparent; margin-top: -0.5rem; text-shadow: 0 0 20px rgba(255, 255, 0, 0.5); }
+    .welcome { font-size: 1.6rem; color: #ffff00; background: rgba(255, 255, 0, 0.1); padding: 0.3rem 1.5rem; border-radius: 40px; display: inline-block; border: 1px solid #ffff00; box-shadow: 0 0 15px rgba(255, 255, 0, 0.3); }
+    
+    .pestanas-wrapper {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 1rem 1rem;
+      scrollbar-width: thin;
+    }
+    .pestanas { display: flex; gap: 1rem; min-width: max-content; }
+    .pestana { 
+      background: rgba(8, 8, 16, 0.9); 
+      border: 2px solid; 
+      border-radius: 20px; 
+      padding: 1rem 1.8rem; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      min-width: 150px; 
+    }
+    .pestana-icon { font-size: 2.5rem; }
+    .pestana-text { font-size: 1.3rem; font-weight: 700; white-space: nowrap; color: white; letter-spacing: 1px; }
+    .pestana.activa { transform: scale(1.02); border-width: 3px; background: rgba(255, 255, 255, 0.05); box-shadow: 0 0 25px currentColor; }
+    
+    .contenido { flex: 1; overflow-y: auto; padding: 1.2rem; }
+    .panel { display: none; }
+    .panel.activo { display: block; }
+    
+    .subseccion { background: rgba(4, 4, 10, 0.7); border-radius: 24px; padding: 1.2rem; margin-bottom: 1.5rem; }
+    .subseccion-titulo { font-size: 2.2rem; margin-bottom: 1.2rem; padding-left: 1rem; border-left: 8px solid; text-shadow: 0 0 10px currentColor; }
+    
+    .productos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+    .producto-card { background: rgba(10, 10, 18, 0.9); border: 2px solid; border-radius: 24px; padding: 1.2rem 0.8rem; display: flex; flex-direction: column; align-items: center; text-align: center; transition: all 0.2s ease; cursor: pointer; }
+    .producto-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 0 25px currentColor; }
+    .producto-card img { width: 130px; height: 130px; object-fit: cover; border-radius: 50%; border: 3px solid; margin-bottom: 0.8rem; box-shadow: 0 0 15px currentColor; background: #0a0a12; }
+    .producto-card h4 { font-size: 1.4rem; color: white; margin-bottom: 0.5rem; }
+    .producto-precio { font-size: 1.5rem; font-weight: 800; padding: 0.3rem 1.2rem; border-radius: 40px; display: inline-block; background: rgba(0,0,0,0.5); border: 2px solid; }
+    
+    .liados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+    .liado-card { background: linear-gradient(145deg, #0e0e18, #080810); border: 2px solid; border-radius: 24px; padding: 1.5rem 1rem; display: flex; flex-direction: column; align-items: center; text-align: center; transition: all 0.2s ease; }
+    .liado-card:hover { transform: translateY(-5px); box-shadow: 0 0 25px currentColor; }
+    .liado-icon { font-size: 5rem; margin-bottom: 0.8rem; filter: drop-shadow(0 0 10px currentColor); }
+    .liado-card h4 { font-size: 1.6rem; margin-bottom: 0.8rem; }
+    .liado-precio { font-size: 1.5rem; font-weight: 800; padding: 0.4rem 1.5rem; border-radius: 40px; display: inline-block; background: rgba(0,0,0,0.5); border: 2px solid; }
+    
+    .munchies-categoria { background: rgba(6, 6, 14, 0.6); border: 2px solid; border-radius: 30px; padding: 1.5rem 1.5rem; margin-bottom: 1.5rem; }
+    .categoria-titulo { font-size: 2.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid; padding-bottom: 0.5rem; display: inline-block; text-shadow: 0 0 10px currentColor; }
+    .items-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .item-munchi { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.5); padding: 1rem 1.5rem; border-radius: 60px; border: 2px solid; transition: all 0.2s ease; }
+    .item-munchi:hover { transform: translateX(5px); box-shadow: 0 0 15px currentColor; }
+    .item-nombre { font-size: 1.5rem; color: white; text-transform: uppercase; font-weight: 600; }
+    .item-precio { font-size: 1.6rem; font-weight: 800; }
+    
+    .eventos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; padding: 0.5rem; }
+    .evento-card { background: transparent; border: 3px solid; border-radius: 24px; overflow: hidden; aspect-ratio: 1/1.2; position: relative; transition: all 0.2s ease; cursor: pointer; }
+    .evento-card:hover { transform: scale(1.02); box-shadow: 0 0 30px currentColor; }
+    .evento-card img { width: 100%; height: 100%; object-fit: cover; display: block; background: #0a0a12; }
+    .evento-delete { position: absolute; top: 8px; right: 8px; background: #ff00ff; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 22px; cursor: pointer; display: none; z-index: 100; box-shadow: 0 0 10px #ff00ff; }
+    .admin-mode .evento-delete { display: block; }
+    
+    .save-indicator { position: fixed; bottom: 100px; right: 30px; background: #ffff00; color: black; padding: 15px 25px; border-radius: 50px; font-size: 1.6rem; font-weight: bold; box-shadow: 0 0 25px #ffff00; z-index: 2100; display: none; border: 2px solid #00ffff; }
+
+    .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-bottom: 20px; }
+    .admin-card { 
+      background: #0c0c16; 
+      border: 2px solid; 
+      border-radius: 20px; 
+      padding: 15px; 
+      cursor: grab;
+      transition: all 0.2s ease;
+    }
+    .admin-card:active { cursor: grabbing; }
+    .admin-card.dragging { opacity: 0.5; cursor: grabbing; }
+    .admin-card.drag-over { border: 3px dashed; background: #16162a; }
+    .admin-img { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 10px; border: 2px solid; background: #0a0a12; }
+    .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; background: #030308; border: 2px solid #22223b; border-radius: 10px; color: white; font-size: 1.4rem; }
+    .admin-input:focus { outline: none; border-color: currentColor; }
+    .admin-precio { width: 100%; padding: 12px; margin-bottom: 10px; background: #030308; border: 2px solid; border-radius: 10px; font-size: 1.4rem; font-weight: bold; }
+    .admin-file-input { display: none; }
+    .admin-btn { width: 100%; padding: 12px; border: none; border-radius: 30px; font-size: 1.4rem; cursor: pointer; margin-bottom: 5px; font-weight: bold; }
+    .btn-upload { background: #22223b; color: white; border: 1px solid; }
+    .btn-delete { background: #ff00ff; color: white; }
+    .drag-handle { 
+      text-align: center; 
+      font-size: 1.2rem; 
+      margin-bottom: 10px; 
+      cursor: grab;
+      background: rgba(255,255,255,0.05);
+      border-radius: 30px;
+      padding: 5px;
+      border: 1px solid;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    
+    .image-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px); z-index: 10000; justify-content: center; align-items: center; cursor: pointer; }
+    .image-modal.active { display: flex; }
+    .modal-content { max-width: 90vw; max-height: 90vh; position: relative; border-radius: 30px; box-shadow: 0 0 60px rgba(0, 255, 255, 0.6); border: 3px solid #00ffff; background: #050508; padding: 8px; }
+    .modal-content img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 24px; }
+    .close-modal { position: absolute; top: -20px; right: -20px; background: #ff00ff; color: white; font-size: 32px; font-weight: bold; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 3px solid #00ffff; box-shadow: 0 0 20px #ff00ff; }
+    @media (max-width: 650px) {
+      body { padding: 0; align-items: stretch; }
+      #panel-admin { padding: 10px !important; }
+      #panel-admin h2 { font-size: 1.5rem !important; }
+      #panel-admin .admin-grid { grid-template-columns: 1fr; }
+      #panel-admin .admin-input, #panel-admin .admin-precio { font-size: 1rem; }
+      #panel-admin .admin-btn { font-size: 1rem; }
+      #panel-admin button { max-width: 100%; overflow-wrap: anywhere; }
+      #panel-admin > div:first-child { align-items:stretch !important; }
+      #panel-login input { font-size: 1.2rem !important; padding: 15px !important; }
+      #panel-login button { font-size: 1.1rem !important; padding: 15px !important; }
+      .admin-card { touch-action: pan-y; }
+    }
+    /* Solo afecta al administrador del móvil; el catálogo de la tablet no cambia. */
+    #panel-admin, #panel-admin * { box-sizing: border-box; }
+    #panel-admin { -webkit-overflow-scrolling: touch; overflow-x: hidden !important; }
+    #panel-admin button, #panel-login button { cursor: pointer; }
+    #panel-admin .admin-grid { min-width: 0; }
+    #panel-admin .admin-card { min-width:0; max-width:100%; }
+    #panel-admin input { min-width:0; max-width:100%; }
+    @media (max-width: 650px) {
+      html, body { width:100%; max-width:100%; overflow-x:hidden; }
+      #panel-admin { padding: 12px 12px calc(20px + env(safe-area-inset-bottom)) !important; }
+      #panel-admin > div:first-child {
+        display:flex !important; flex-direction:column !important; align-items:stretch !important;
+        gap:12px !important; padding:16px 12px !important; margin-bottom:12px !important;
+        border-radius:18px !important;
+      }
+      #panel-admin > div:first-child h2 {
+        font-size: clamp(1.2rem, 6vw, 1.65rem) !important;
+        line-height:1.2 !important; margin:0 !important;
+      }
+      #panel-admin > div:first-child > div {
+        display:grid !important; grid-template-columns:minmax(0,1fr) minmax(0,0.72fr) !important;
+        gap:8px !important; width:100% !important;
+      }
+      #panel-admin > div:first-child > div > button {
+        width:100% !important; min-width:0 !important; padding:12px 8px !important;
+        font-size:0.98rem !important; line-height:1.25 !important;
+        border-radius:16px !important; overflow-wrap:normal !important;
+        word-break:normal !important; white-space:normal !important;
+      }
+      #panel-admin > div:nth-child(2) { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px !important; }
+      #panel-admin > div:nth-child(2) > button {
+        width:100%; min-width:0; font-size:0.78rem !important; line-height:1.35;
+        padding:10px 6px !important; white-space:normal;
+      }
+      #seccionesAdminList { padding:12px !important; margin-bottom:12px !important; }
+      #seccionesAdminList button, #adminTabsContainer button { font-size:0.88rem !important; padding:9px 11px !important; }
+      #adminTabsContainer { gap:7px !important; margin-bottom:12px !important; }
+      #admin-contenido { padding:12px !important; margin-bottom:14px !important; }
+      #admin-contenido > p { font-size:1.15rem !important; }
+      #admin-contenido h3 { font-size:1.25rem !important; line-height:1.35; overflow-wrap:anywhere; }
+      #panel-admin .admin-grid { grid-template-columns:minmax(0,1fr) !important; gap:12px !important; }
+      #panel-admin .admin-input, #panel-admin .admin-precio { font-size:16px !important; }
+      #panel-admin .admin-btn { font-size:1rem !important; padding:12px !important; }
+      #panel-admin > button:last-of-type {
+        font-size:1.15rem !important; line-height:1.3 !important; padding:17px 12px !important;
+        border-radius:24px !important; margin:0 0 10px !important; white-space:normal !important;
+      }
+      #firebase-status { left:10px !important; right:10px !important; bottom:calc(10px + env(safe-area-inset-bottom)) !important; font-size:13px !important; overflow-wrap:anywhere; }
+      #panel-login > div { padding:22px 16px !important; border-radius:22px !important; }
+      #panel-login h2 { font-size:1.8rem !important; margin-bottom:20px !important; }
+      #panel-login input { font-size:16px !important; padding:14px !important; }
+      #panel-login > div > div { gap:8px !important; }
+      #panel-login button { padding:13px 6px !important; font-size:1rem !important; border-radius:15px !important; }
+    }
+    .kiosco { display:none !important; }
+    #btn-admin { display:none !important; }
+  </style>
+</head>
+<body>
+  <main class="kiosco">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-masquehigh">EL TIO J</div>
+        <div class="logo-club">CLUB</div>
+      </div>
+      <div class="welcome">✨ Bienvenido a El Tio J Club ✨</div>
+    </div>
+
+    <div class="pestanas-wrapper">
+      <div class="pestanas" id="pestanasContainer"></div>
+    </div>
+
+    <div class="contenido" id="contenidoPaneles"></div>
+  </main>
+
+  <div id="imageModal" class="image-modal" onclick="cerrarModalImagen()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <img id="modalImage" src="" alt="Vista ampliada">
+      <div class="close-modal" onclick="cerrarModalImagen()">✖</div>
+    </div>
+  </div>
+
+  <div style="position: fixed; bottom: 30px; right: 30px; z-index: 2000;">
+    <button id="btn-admin" onclick="mostrarLogin()" style="width: 80px; height: 80px; border-radius: 50%; background: #0c0c16; border: 3px solid #00ffff; color: #00ffff; font-size: 36px; box-shadow: 0 0 25px #00ffff; cursor: pointer; transition: all 0.2s ease;">⚙️</button>
+  </div>
+
+  <div id="panel-login" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); z-index: 2001; align-items: center; justify-content: center;">
+    <div style="background: #0c0c16; border: 3px solid #00ffff; border-radius: 40px; padding: 40px; width: 90%; max-width: 500px; box-shadow: 0 0 60px #00ffff;">
+      <h2 style="background: linear-gradient(135deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; color: transparent; text-align: center; font-size: 3rem; margin-bottom: 30px;">🔐 ADMIN</h2>
+      <input type="password" id="login-password" placeholder="Contraseña" style="width: 100%; padding: 25px; font-size: 2rem; background: #030308; border: 2px solid #00ffff; border-radius: 30px; color: white; margin-bottom: 30px; text-align: center;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <button onclick="comprobarLogin()" style="background: #ffff00; border: 2px solid #00ffff; border-radius: 30px; padding: 25px; font-size: 2rem; font-weight: bold; color: black; cursor: pointer;">ENTRAR</button>
+        <button onclick="cerrarLogin()" style="background: #22223b; border: 2px solid #ff00ff; border-radius: 30px; padding: 25px; font-size: 2rem; font-weight: bold; color: white; cursor: pointer;">CERRAR</button>
+      </div>
+      <p id="login-error" style="color: #ff00ff; text-align: center; font-size: 1.8rem; margin-top: 20px; display: none;">❌ Contraseña incorrecta</p>
+    </div>
+  </div>
+
+  <div id="panel-admin" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #050508; z-index: 2002; overflow-y: auto; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; background: #0c0c16; padding: 20px; border-radius: 20px; border: 2px solid #00ffff;">
+      <h2 style="background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 2.5rem;">✏️ EDITAR TODO</h2>
+      <div style="display: flex; gap: 10px;">
+        <button id="addNewSectionBtn" style="background: #ffff00; border: 2px solid #00ffff; border-radius: 40px; padding: 12px 24px; font-size: 1.4rem; font-weight: bold; color: black; cursor: pointer;">➕ AÑADIR SECCIÓN</button>
+        <button onclick="cerrarAdmin()" style="background: #22223b; border: 2px solid #ff00ff; border-radius: 40px; padding: 12px 24px; font-size: 1.4rem; color: white; cursor: pointer;">CERRAR</button>
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+      <button onclick="exportarCatalogo()" style="background:#22223b;color:white;padding:10px;border-radius:10px;border:1px solid #00ffff;">⬇️ Exportar copia JSON</button>
+      <button onclick="document.getElementById('importar-json').click()" style="background:#22223b;color:white;padding:10px;border-radius:10px;border:1px solid #00ffff;">⬆️ Importar copia JSON</button>
+      <input id="importar-json" type="file" accept="application/json,.json" style="display:none" onchange="importarCatalogo(event)">
+    </div>
+    <div id="seccionesAdminList" style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; background: #0c0c16; padding: 15px; border-radius: 20px; border: 1px solid #22223b;"></div>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;" id="adminTabsContainer"></div>
+    
+    <div id="admin-contenido" style="background: #0c0c16; border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #22223b;">
+      <p style="color: #888; text-align: center; font-size: 1.8rem;">Selecciona una sección para editar</p>
+    </div>
+    
+    <button onclick="guardarTodo()" style="width: 100%; background: linear-gradient(135deg, #00ffff, #ff00ff); border: 2px solid #ffff00; border-radius: 60px; padding: 25px; font-size: 2.5rem; font-weight: bold; color: white; cursor: pointer; box-shadow: 0 0 20px #00ffff;">💾 GUARDAR CAMBIOS</button>
+  </div>
+
+  <div id="saveIndicator" class="save-indicator">✅ GUARDADO</div>
+
+  <div id="firebase-status" role="status" style="position:fixed;left:12px;bottom:12px;z-index:2500;background:#141421;color:#fff;border:1px solid #00ffff;border-radius:12px;padding:8px 12px;font:14px Segoe UI, sans-serif;display:none;"></div>
+
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script defer src="./firebase-sync.js"></script>
+  <script>
+    
+    const COLORES_NEON = {
+      cian: { color: '#00ffff', glow: '#00ffff', bg: 'rgba(0, 255, 255, 0.1)' },
+      magenta: { color: '#ff00ff', glow: '#ff00ff', bg: 'rgba(255, 0, 255, 0.1)' },
+      amarillo: { color: '#ffff00', glow: '#ffff00', bg: 'rgba(255, 255, 0, 0.1)' },
+      verdeMenta: { color: '#00ffaa', glow: '#00ffaa', bg: 'rgba(0, 255, 170, 0.1)' },
+      naranjaQuemado: { color: '#ff6600', glow: '#ff6600', bg: 'rgba(255, 102, 0, 0.1)' },
+      rojoCereza: { color: '#ff0033', glow: '#ff0033', bg: 'rgba(255, 0, 51, 0.1)' },
+      azulElectro: { color: '#0044ff', glow: '#0044ff', bg: 'rgba(0, 68, 255, 0.1)' },
+      lima: { color: '#aaff00', glow: '#aaff00', bg: 'rgba(170, 255, 0, 0.1)' }
+    };
+
+    const COLORES_POR_TIPO = {
+      extracciones: COLORES_NEON.magenta,
+      hierbas: COLORES_NEON.verdeMenta,
+      hash: COLORES_NEON.naranjaQuemado,
+      liados: COLORES_NEON.cian,
+      munchies: COLORES_NEON.amarillo,
+      eventos: COLORES_NEON.azulElectro
+    };
+
+    // Recupera los colores del catálogo original, necesarios para pintar las secciones del panel.
+    function getColorForSection(sec) {
+      if (sec.colorKey && COLORES_POR_TIPO[sec.colorKey]) return COLORES_POR_TIPO[sec.colorKey];
+      if (sec.colorKey && COLORES_NEON[sec.colorKey]) return COLORES_NEON[sec.colorKey];
+      const coloresLista = Object.values(COLORES_NEON);
+      const hash = String(sec.id || sec.nombre || '').length;
+      return coloresLista[hash % coloresLista.length];
+    }
+
+    const EXTRACCIONES_LIST = [
+      { nombre: "Ice fresh Frozen 90mc", precio: "12" },
+      { nombre: "Ice fresh mix", precio: "18" },
+      { nombre: "Ice frozen Georgia pie", precio: "20" },
+      { nombre: "Ice fresh chapel", precio: "20" }
+    ];
+    
+    const HIERBAS_LIST = [
+      { nombre: "Amnesia haze pro", precio: "4" }, { nombre: "Chicken waffle", precio: "4" },
+      { nombre: "Green Passion", precio: "4" }, { nombre: "White widow", precio: "4,5" },
+      { nombre: "Trop cherry gas", precio: "4,5" }, { nombre: "Purple fruit", precio: "4,5" },
+      { nombre: "Tropicanna", precio: "5" }, { nombre: "Chapel", precio: "5" },
+      { nombre: "Georgia pie", precio: "5" }, { nombre: "OG kush", precio: "5" },
+      { nombre: "Tricho Jordan", precio: "5" }, { nombre: "Cheetah piss", precio: "5" },
+      { nombre: "Runtz", precio: "5" }, { nombre: "Menthol runtz", precio: "5" },
+      { nombre: "Tropicana cherry", precio: "5,5" }, { nombre: "Gelato", precio: "5,5" },
+      { nombre: "Chapel max", precio: "5,5" }, { nombre: "Skitlez", precio: "5,5" },
+      { nombre: "Superboom (CANADA)", precio: "7" }, { nombre: "Tangle (CANADA)", precio: "7" },
+      { nombre: "Gelato X purple+", precio: "7" }
+    ];
+    
+    const HASH_LIST = [
+      { nombre: "Polen", precio: "3,5" }, { nombre: "Polen", precio: "4" },
+      { nombre: "Sonic", precio: "4" }, { nombre: "Bitcoin", precio: "5" },
+      { nombre: "Banana Runtz", precio: "5" }, { nombre: "Mandarin cookies", precio: "5,5" },
+      { nombre: "Cali gas", precio: "6" }, { nombre: "Hash", precio: "6" },
+      { nombre: "Banana cherry", precio: "6" }, { nombre: "Cbd", precio: "6" },
+      { nombre: "Chucky dry", precio: "6,5" }, { nombre: "Tropicana cookies", precio: "6,5" },
+      { nombre: "Mimosa dry", precio: "7" }, { nombre: "Skitlez dry", precio: "7" },
+      { nombre: "Dos y dos X Stardawg frozen", precio: "8,5" }, { nombre: "Frozen G10", precio: "9" },
+      { nombre: "Mimosa frozen", precio: "10" }, { nombre: "Static", precio: "10" },
+      { nombre: "Frozen forbidden fruit", precio: "10,5" }, { nombre: "Double static", precio: "12" }
+    ];
+    
+    const LIADOS_LIST = [
+      { nombre: "Liados mix (verde)", precio: "1x3 | 2x5 | 5x10" },
+      { nombre: "Liados polen", precio: "1x3 | 2x5" },
+      { nombre: "Liados Bitcoin", precio: "1x3,5" },
+      { nombre: "Liados Cali gas", precio: "1x3,5" },
+      { nombre: "Liados hash", precio: "1x3,5" },
+      { nombre: "Untar Liado con rosin", precio: "2,5" }
+    ];
+
+    let secciones = [
+      { id: "extracciones", nombre: "EXTRACCIONES", icono: "⚡", tipo: "productos", items: [], colorKey: "extracciones" },
+      { id: "hierbas", nombre: "HIERBAS", icono: "🌿", tipo: "productos", items: [], colorKey: "hierbas" },
+      { id: "hash", nombre: "HASH", icono: "🍫", tipo: "productos", items: [], colorKey: "hash" },
+      { id: "liados", nombre: "LIADOS", icono: "🚬", tipo: "liados", items: [], colorKey: "liados" },
+      { id: "munchies", nombre: "MUNCHIES", icono: "🍕", tipo: "munchies", sub: { bebidas: [], picar: [] }, colorKey: "munchies" },
+      { id: "eventos", nombre: "EVENTOS", icono: "🎉", tipo: "eventos", items: [], colorKey: "eventos" }
+    ];
+
+    function crearImagenPlaceholder() {
+      return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23222'/%3E%3Ctext x='100' y='110' fill='%23666' text-anchor='middle' font-size='14'%3ESIN FOTO%3C/text%3E%3C/svg%3E";
+    }
+
+    function mostrarErrorGuardado(error) {
+      console.error('Error al guardar:', error);
+      const texto = error && error.message ? error.message : String(error);
+      mostrarEstado('❌ No se ha guardado: ' + texto, true);
+    }
+
+    function mostrarEstado(texto, persistente = false) {
+      const el = document.getElementById('firebase-status');
+      if (!el) return;
+      el.textContent = texto;
+      el.style.display = 'block';
+      clearTimeout(window._estadoTimer);
+      if (!persistente) window._estadoTimer = setTimeout(() => el.style.display = 'none', 3500);
+    }
+
+    function prepararPredeterminados() {
+      secciones[0].items = EXTRACCIONES_LIST.map(item => ({ img: crearImagenPlaceholder(), ...item }));
+      secciones[1].items = HIERBAS_LIST.map(item => ({ img: crearImagenPlaceholder(), ...item }));
+      secciones[2].items = HASH_LIST.map(item => ({ img: crearImagenPlaceholder(), ...item }));
+      secciones[3].items = LIADOS_LIST.map(item => ({ ...item }));
+      secciones[4].sub = {
+        bebidas: [{ nombre: 'COCACOLA', precio: '2' }, { nombre: 'AGUA', precio: '1,50' }],
+        picar: [{ nombre: 'PATATAS', precio: '1,50' }]
+      };
+      secciones[5].items = [];
+    }
+
+    function resolverImagen(ruta) {
+      return CatalogoFirebase.resolverImagen(ruta, () => renderizarTodo());
+    }
+
+    function abrirImagenGrande(url) {
+      document.getElementById('modalImage').src = resolverImagen(url);
+      document.getElementById('imageModal').classList.add('active');
+    }
+
+    function cerrarModalImagen() {
+      document.getElementById('imageModal').classList.remove('active');
+      document.getElementById('modalImage').src = '';
+    }
+
+    function renderizarTodo() {
+      renderPestanas();
+      renderPaneles();
+    }
+
+    function renderPestanas() {
+      const container = document.getElementById('pestanasContainer');
+      container.innerHTML = '';
+      secciones.forEach((sec, idx) => {
+        const pest = document.createElement('div');
+        pest.className = 'pestana';
+        if (idx === 0) pest.classList.add('activa');
+        const color = getColorForSection(sec);
+        pest.style.borderColor = color.color;
+        pest.style.color = color.color;
+        if (pest.classList.contains('activa')) {
+          pest.style.boxShadow = `0 0 25px ${color.color}`;
+        }
+        pest.innerHTML = `<div class="pestana-icon">${sec.icono}</div><div class="pestana-text">${sec.nombre}</div>`;
+        pest.addEventListener('click', (function(p, i, c) {
+          return function() {
+            document.querySelectorAll('.pestana').forEach(pest => {
+              pest.classList.remove('activa');
+              pest.style.boxShadow = '';
+            });
+            p.classList.add('activa');
+            p.style.boxShadow = `0 0 25px ${c.color}`;
+            document.querySelectorAll('.panel').forEach((pn, pi) => { pn.classList.toggle('activo', pi === i); });
+          };
+        })(pest, idx, color));
+        container.appendChild(pest);
+      });
+    }
+
+    function renderPaneles() {
+      const contenedor = document.getElementById('contenidoPaneles');
+      contenedor.innerHTML = '';
+      secciones.forEach((sec, idx) => {
+        const panel = document.createElement('div');
+        panel.className = 'panel' + (idx === 0 ? ' activo' : '');
+        let html = '';
+        const secColor = getColorForSection(sec);
+        
+        if (sec.tipo === 'productos') {
+          html = `<div class="subseccion" style="border: 1px solid ${secColor.color};"><h3 class="subseccion-titulo" style="border-left-color: ${secColor.color}; color: ${secColor.color};">${sec.icono} ${sec.nombre}</h3><div class="productos-grid" id="grid-${sec.id}"></div></div>`;
+        } else if (sec.tipo === 'liados') {
+          html = `<div class="subseccion" style="border: 1px solid ${secColor.color};"><h3 class="subseccion-titulo" style="border-left-color: ${secColor.color}; color: ${secColor.color};">🚬 ${sec.nombre}</h3><div class="liados-grid" id="grid-${sec.id}"></div></div>`;
+        } else if (sec.tipo === 'munchies') {
+          html = `<div><div class="munchies-categoria" style="border-color: ${secColor.color};"><div class="categoria-titulo" style="color: ${secColor.color}; border-bottom-color: ${secColor.color};">🥤 BEBIDAS</div><div class="items-lista" id="bebidas-lista-${sec.id}"></div></div>
+                  <div class="munchies-categoria" style="border-color: ${secColor.color};"><div class="categoria-titulo" style="color: ${secColor.color}; border-bottom-color: ${secColor.color};">🍿 PICAR</div><div class="items-lista" id="picar-lista-${sec.id}"></div></div></div>`;
+        } else if (sec.tipo === 'eventos') {
+          html = `<div class="subseccion" style="border: 1px solid ${secColor.color};"><h3 class="subseccion-titulo" style="border-left-color: ${secColor.color}; color: ${secColor.color};">🎉 ${sec.nombre}</h3><div class="eventos-grid" id="eventos-grid-${sec.id}"></div></div>`;
+        }
+        panel.innerHTML = html;
+        contenedor.appendChild(panel);
+      });
+      
+      secciones.forEach(sec => {
+        if (sec.tipo === 'productos') llenarProductos(sec);
+        if (sec.tipo === 'liados') llenarLiados(sec);
+        if (sec.tipo === 'munchies') llenarMunchies(sec);
+        if (sec.tipo === 'eventos') llenarEventos(sec);
+      });
+    }
+
+    function llenarProductos(sec) {
+      const grid = document.getElementById(`grid-${sec.id}`);
+      if (!grid) return;
+      const color = getColorForSection(sec);
+      grid.innerHTML = '';
+      sec.items.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'producto-card';
+        card.style.borderColor = color.color;
+        card.style.boxShadow = `0 0 15px ${color.glow}`;
+        card.style.color = color.color;
+        // SIN SÍMBOLO DE EURO - solo el número
+        card.innerHTML = `<img src="${resolverImagen(item.img)}" style="border-color: ${color.color}; box-shadow: 0 0 15px ${color.color};"><h4 style="color: white;">${escapeHtml(item.nombre)}</h4><div class="producto-precio" style="color: ${color.color}; border-color: ${color.color}; background: ${color.bg};">${escapeHtml(item.precio)}</div>`;
+        card.addEventListener('click', () => { if(item.img) abrirImagenGrande(item.img); });
+        grid.appendChild(card);
+      });
+    }
+
+    function llenarLiados(sec) {
+      const grid = document.getElementById(`grid-${sec.id}`);
+      if (!grid) return;
+      const color = getColorForSection(sec);
+      grid.innerHTML = '';
+      sec.items.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'liado-card';
+        div.style.borderColor = color.color;
+        div.style.boxShadow = `0 0 15px ${color.glow}`;
+        div.style.color = color.color;
+        // SIN SÍMBOLO - se muestra exactamente como está guardado (1x3 | 2x5 o 2,5)
+        div.innerHTML = `<div class="liado-icon" style="filter: drop-shadow(0 0 10px ${color.color});">🚬</div><h4 style="color: ${color.color};">${escapeHtml(item.nombre)}</h4><div class="liado-precio" style="color: ${color.color}; border-color: ${color.color}; background: ${color.bg};">${escapeHtml(item.precio)}</div>`;
+        grid.appendChild(div);
+      });
+    }
+
+    function llenarMunchies(sec) {
+      const color = getColorForSection(sec);
+      const bebidasDiv = document.getElementById(`bebidas-lista-${sec.id}`);
+      const picarDiv = document.getElementById(`picar-lista-${sec.id}`);
+      if (bebidasDiv) {
+        bebidasDiv.innerHTML = '';
+        sec.sub.bebidas.forEach(item => { 
+          // SIN SÍMBOLO DE EURO
+          bebidasDiv.innerHTML += `<div class="item-munchi" style="border-color: ${color.color};"><span class="item-nombre">${escapeHtml(item.nombre)}</span><span class="item-precio" style="color: ${color.color};">${escapeHtml(item.precio)}</span></div>`; 
+        });
+      }
+      if (picarDiv) {
+        picarDiv.innerHTML = '';
+        sec.sub.picar.forEach(item => { 
+          // SIN SÍMBOLO DE EURO
+          picarDiv.innerHTML += `<div class="item-munchi" style="border-color: ${color.color};"><span class="item-nombre">${escapeHtml(item.nombre)}</span><span class="item-precio" style="color: ${color.color};">${escapeHtml(item.precio)}</span></div>`; 
+        });
+      }
+    }
+
+    function llenarEventos(sec) {
+      const grid = document.getElementById(`eventos-grid-${sec.id}`);
+      if (!grid) return;
+      const color = getColorForSection(sec);
+      grid.innerHTML = '';
+      sec.items.forEach((img, idx) => {
+        const card = document.createElement('div');
+        card.className = 'evento-card';
+        card.style.borderColor = color.color;
+        card.style.boxShadow = `0 0 15px ${color.glow}`;
+        card.style.color = color.color;
+        card.innerHTML = `<img src="${resolverImagen(img)}"><button class="evento-delete" onclick="eliminarEvento('${sec.id}', ${idx})">✖</button>`;
+        card.addEventListener('click', (e) => { if(!e.target.classList.contains('evento-delete')) abrirImagenGrande(img); });
+        grid.appendChild(card);
+      });
+    }
+
+    function eliminarEvento(secId, index) {
+      const sec = secciones.find(s => s.id === secId);
+      if (sec && sec.items[index]) {
+        sec.items.splice(index, 1);
+        guardarCompleto();
+        renderizarTodo();
+        if (document.getElementById("panel-admin").style.display === "block") {
+          mostrarSeccionAdmin(secId);
+        }
+      }
+    }
+
+    function escapeHtml(str) { 
+      return String(str || "").replace(/[&<>]/g, function(m){ 
+        if(m==="&") return "&amp;"; 
+        if(m==="<") return "&lt;"; 
+        if(m===">") return "&gt;"; 
+        return m;
+      }); 
+    }
+
+    let guardadoPendiente = Promise.resolve();
+    function guardarCompleto() {
+      // Snapshot al pulsar guardar; cola para impedir que una operación antigua sobrescriba otra nueva.
+      const copia = JSON.parse(JSON.stringify({ secciones }));
+      guardadoPendiente = guardadoPendiente.catch(() => {}).then(async () => {
+        await CatalogoFirebase.guardarCatalogo(copia);
+        mostrarEstado('✅ Guardado en Firebase');
+      });
+      guardadoPendiente.catch(mostrarErrorGuardado);
+      return guardadoPendiente;
+    }
+    function cargarDatos() {
+      prepararPredeterminados();
+      return CatalogoFirebase.leerCatalogo().then(datos => {
+        if (datos && Array.isArray(datos.secciones)) secciones = datos.secciones;
+        else mostrarEstado('Sin datos online: pulsa Guardar cambios para publicar el catálogo inicial.');
+        renderizarTodo();
+      }).catch(mostrarErrorGuardado);
+    }
+    function mostrarIndicator() { mostrarEstado('✅ Guardado en Firebase'); }
+
+    async function exportarCatalogo() {
+      const archivo = new Blob([JSON.stringify({ secciones }, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(archivo);
+      a.download = 'eltioj-copia-catalogo.json';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    }
+    async function importarCatalogo(e) {
+      const f=e.target.files?.[0];
+      if (!f) return;
+      try {
+        const data=JSON.parse(await f.text());
+        if (!Array.isArray(data.secciones) || !data.secciones.every(s=>s.id && s.tipo)) throw new Error('Formato no válido');
+        if (!confirm('¿Sustituir todo el catálogo por la copia seleccionada?')) return;
+        secciones=data.secciones;
+        await guardarCompleto();
+        renderizarTodo();renderAdminUI();
+        mostrarEstado('✅ Copia importada');
+      } catch(err){mostrarErrorGuardado(err)}
+      finally {e.target.value=''}
+    }
+
+    function moverSeccion(index, direccion) {
+      const target=index+direccion;
+      if (target<0 || target>=secciones.length) return;
+      [secciones[index],secciones[target]]=[secciones[target],secciones[index]];
+      guardarCompleto();renderizarTodo();renderAdminUI();
+    }
+    function renderOrdenSecciones() {
+      const el=document.getElementById('admin-reorden-secciones');
+      if(!el)return;
+      el.innerHTML='<p style="color:white;width:100%">Orden de las secciones:</p>';
+      secciones.forEach((s,i)=>{
+        const d=document.createElement('div'); d.style.cssText='display:flex;align-items:center;gap:5px;border:1px solid #444;border-radius:12px;padding:7px;color:white';
+        const t=document.createElement('span');t.textContent=s.icono+' '+s.nombre;d.appendChild(t);
+        for(const [arrow,delta] of [['↑',-1],['↓',1]]){
+          const b=document.createElement('button');b.textContent=arrow;b.disabled=i+delta<0||i+delta>=secciones.length;
+          b.style.cssText='padding:8px;background:#22223b;color:white;border:1px solid #00ffff;border-radius:8px';
+          b.onclick=()=>moverSeccion(i,delta);d.appendChild(b);
+        }el.appendChild(d);
+      });
+    }
+    function moverProducto(secId,index,direccion){
+      const s=secciones.find(x=>x.id===secId);const j=index+direccion;
+      if(!s?.items||j<0||j>=s.items.length)return;
+      [s.items[index],s.items[j]]=[s.items[j],s.items[index]];
+      guardarCompleto();renderizarTodo();mostrarSeccionAdmin(secId);
+    }
+    function anadirControlesOrden(secId){
+      const grid=document.getElementById('admin-grid-'+secId);if(!grid)return;
+      [...grid.querySelectorAll('.admin-card')].forEach((card,i,arr)=>{
+        const d=document.createElement('div');d.style.cssText='display:flex;gap:8px;margin-bottom:10px';
+        for(const [label,delta] of [['⬆️ Subir',-1],['⬇️ Bajar',1]]){
+          const b=document.createElement('button');b.textContent=label;b.disabled=i+delta<0||i+delta>=arr.length;
+          b.style.cssText='flex:1;padding:10px;background:#22223b;color:white;border:1px solid #00ffff;border-radius:8px';
+          b.onclick=()=>moverProducto(secId,i,delta);d.appendChild(b);
+        }card.prepend(d);
+      });
+    }
+
+    let draggedItem = null;
+    let draggedIndex = null;
+    let currentSecId = null;
+
+    function mostrarLogin() {
+      document.getElementById('panel-login').style.display = 'flex';
+      document.getElementById('login-password').value = '';
+    }
+
+    function cerrarLogin() {
+      document.getElementById('panel-login').style.display = 'none';
+      document.getElementById('login-error').style.display = 'none';
+      document.getElementById('login-password').value = '';
+    }
+
+    async function comprobarLogin() {
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+      errorEl.style.display='none';
+      try {
+        await CatalogoFirebase.entrar(password);
+        document.getElementById('login-password').value='';
+        document.getElementById('panel-login').style.display='none';
+        document.getElementById('panel-admin').style.display='block';
+        document.body.classList.add('admin-mode');
+        await cargarDatos();
+        renderAdminUI();
+      } catch (err) {
+        errorEl.textContent='❌ No se ha podido acceder: comprueba la contraseña y la conexión';
+        errorEl.style.display='block';
+        document.getElementById('login-password').value='';
+        console.error(err);
+      }
+    }
+    async function cerrarAdmin() {
+      await CatalogoFirebase.salir();
+      document.getElementById('panel-admin').style.display='none';
+      document.body.classList.remove('admin-mode');
+      document.getElementById('panel-login').style.display='flex';
+    }
+
+    function renderAdminUI() {
+      const seccionesList = document.getElementById('seccionesAdminList');
+      seccionesList.innerHTML = '<strong style="color:#ff00ff; margin-right:10px;">🗑️ Eliminar sección:</strong>';
+      secciones.forEach((sec, idx) => {
+        const color = getColorForSection(sec);
+        const btn = document.createElement('button');
+        btn.textContent = `❌ ${sec.nombre}`;
+        btn.style.background = color.color;
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+        btn.style.borderRadius = '20px';
+        btn.style.padding = '8px 16px';
+        btn.style.cursor = 'pointer';
+        btn.onclick = () => eliminarSeccion(idx);
+        seccionesList.appendChild(btn);
+      });
+
+      const tabsContainer = document.getElementById('adminTabsContainer');
+      tabsContainer.innerHTML = '';
+      secciones.forEach((sec) => {
+        const color = getColorForSection(sec);
+        const tab = document.createElement('button');
+        tab.textContent = `${sec.icono} ${sec.nombre}`;
+        tab.style.background = color.bg;
+        tab.style.border = `2px solid ${color.color}`;
+        tab.style.borderRadius = '20px';
+        tab.style.padding = '10px 20px';
+        tab.style.cursor = 'pointer';
+        tab.style.color = color.color;
+        tab.style.fontWeight = 'bold';
+        tab.onclick = () => mostrarSeccionAdmin(sec.id);
+        tabsContainer.appendChild(tab);
+      });
+
+      document.getElementById('addNewSectionBtn').onclick = () => añadirNuevaSeccion();
+      renderOrdenSecciones();
+    }
+
+    function eliminarSeccion(index) {
+      if (secciones.length <= 1) {
+        alert("No puedes eliminar la única sección que queda.");
+        return;
+      }
+      if (confirm(`¿Eliminar la sección "${secciones[index].nombre}"?`)) {
+        secciones.splice(index, 1);
+        guardarCompleto();
+        renderizarTodo();
+        renderAdminUI();
+        document.getElementById('admin-contenido').innerHTML = '<p style="color: #888; text-align: center; font-size: 1.8rem;">Selecciona una sección para editar</p>';
+      }
+    }
+
+    function añadirNuevaSeccion() {
+      let nombre = prompt("Nombre de la nueva sección (ej: 'CREMAS', 'PIPAS'):");
+      if (!nombre) return;
+      let icono = prompt("Icono emoji (ej: 💎, 🧴, 🥨):", "📦");
+      if (!icono) icono = "📦";
+      let tipo = prompt("Tipo: 'productos', 'liados', 'eventos', 'munchies'", "productos");
+      if (!['productos', 'liados', 'eventos', 'munchies'].includes(tipo)) tipo = "productos";
+      
+      const newId = "sec_" + Date.now();
+      const coloresLista = Object.keys(COLORES_NEON);
+      const colorAleatorio = coloresLista[Math.floor(Math.random() * coloresLista.length)];
+      
+      let nuevaSeccion = { id: newId, nombre: nombre.toUpperCase(), icono: icono, tipo: tipo, colorKey: colorAleatorio };
+      
+      if (tipo === 'productos') nuevaSeccion.items = [];
+      else if (tipo === 'liados') nuevaSeccion.items = [];
+      else if (tipo === 'eventos') nuevaSeccion.items = [];
+      else if (tipo === 'munchies') nuevaSeccion.sub = { bebidas: [], picar: [] };
+      
+      secciones.push(nuevaSeccion);
+      guardarCompleto();
+      renderizarTodo();
+      renderAdminUI();
+      mostrarSeccionAdmin(newId);
+    }
+
+    function mostrarSeccionAdmin(seccionId) {
+      const sec = secciones.find(s => s.id === seccionId);
+      if (!sec) return;
+      const color = getColorForSection(sec);
+      
+      let html = '';
+      if (sec.tipo === 'productos') {
+        html = `<h3 style="color: ${color.color}; margin-bottom: 20px;">${sec.icono} ${sec.nombre} <span style="font-size:1rem;">(Arrastra para reordenar)</span></h3><div class="admin-grid" id="admin-grid-${sec.id}">`;
+        sec.items.forEach((item, i) => {
+          html += `
+            <div class="admin-card" style="border-color: ${color.color};" draggable="true" data-index="${i}" data-secid="${sec.id}" 
+                 ondragstart="iniciarDrag(event, ${i}, '${sec.id}')" 
+                 ondragend="finalizarDrag(event)" 
+                 ondragover="permitirDrop(event)"
+                 ondrop="soltarDrop(event, ${i}, '${sec.id}')"
+                 ondragenter="marcarSobreDrop(event)"
+                 ondragleave="limpiarMarcador(event)">
+              <div class="drag-handle" style="color: ${color.color}; border-color: ${color.color};">⋮⋮ ARRASTRAR ⋮⋮</div>
+              <img src="${resolverImagen(item.img)}" id="admin-img-${sec.id}-${i}" class="admin-img" style="border-color: ${color.color};">
+              <input type="file" id="file-${sec.id}-${i}" accept="image/*" class="admin-file-input" onchange="subirImagenProducto('${sec.id}', ${i})">
+              <button onclick="document.getElementById('file-${sec.id}-${i}').click()" class="admin-btn btn-upload" style="border-color: ${color.color};">📷 CAMBIAR FOTO</button>
+              <input type="text" id="nombre-${sec.id}-${i}" value="${escapeHtml(item.nombre)}" class="admin-input" placeholder="Nombre" onchange="actualizarProducto('${sec.id}', ${i}, 'nombre', this.value)">
+              <input type="text" id="precio-${sec.id}-${i}" value="${escapeHtml(item.precio)}" class="admin-precio" style="border-color: ${color.color}; color: ${color.color};" placeholder="Precio" onchange="actualizarProducto('${sec.id}', ${i}, 'precio', this.value)">
+              <button onclick="eliminarProductoItem('${sec.id}', ${i})" class="admin-btn btn-delete">🗑️ ELIMINAR</button>
+            </div>
+          `;
+        });
+        html += '</div><button onclick="añadirProductoItem(\'' + sec.id + '\')" style="width:100%; background: ' + color.color + '; border: 2px solid white; border-radius:30px; padding:15px; font-size:1.8rem; margin-top:10px; color:white; font-weight:bold; cursor:pointer; box-shadow: 0 0 15px ' + color.color + ';">➕ AÑADIR PRODUCTO</button>';
+      } 
+      else if (sec.tipo === 'liados') {
+        html = `<h3 style="color: ${color.color}; margin-bottom: 20px;">${sec.icono} ${sec.nombre} <span style="font-size:1rem;">(Arrastra para reordenar)</span></h3><div class="admin-grid" id="admin-grid-${sec.id}">`;
+        sec.items.forEach((item, i) => {
+          html += `
+            <div class="admin-card" style="border-color: ${color.color};" draggable="true" data-index="${i}" data-secid="${sec.id}" 
+                 ondragstart="iniciarDrag(event, ${i}, '${sec.id}')" 
+                 ondragend="finalizarDrag(event)" 
+                 ondragover="permitirDrop(event)"
+                 ondrop="soltarDrop(event, ${i}, '${sec.id}')"
+                 ondragenter="marcarSobreDrop(event)"
+                 ondragleave="limpiarMarcador(event)">
+              <div class="drag-handle" style="color: ${color.color}; border-color: ${color.color};">⋮⋮ ARRASTRAR ⋮⋮</div>
+              <div class="liado-icon" style="font-size: 5rem; text-align: center; filter: drop-shadow(0 0 10px ${color.color});">🚬</div>
+              <input type="text" id="nombre-${sec.id}-${i}" value="${escapeHtml(item.nombre)}" class="admin-input" placeholder="Nombre" onchange="actualizarProducto('${sec.id}', ${i}, 'nombre', this.value)">
+              <input type="text" id="precio-${sec.id}-${i}" value="${escapeHtml(item.precio)}" class="admin-precio" style="border-color: ${color.color}; color: ${color.color};" placeholder="Precio" onchange="actualizarProducto('${sec.id}', ${i}, 'precio', this.value)">
+              <button onclick="eliminarProductoItem('${sec.id}', ${i})" class="admin-btn btn-delete">🗑️ ELIMINAR</button>
+            </div>
+          `;
+        });
+        html += '</div><button onclick="añadirProductoItem(\'' + sec.id + '\')" style="width:100%; background: ' + color.color + '; border: 2px solid white; border-radius:30px; padding:15px; font-size:1.8rem; margin-top:10px; color:white; font-weight:bold; cursor:pointer;">➕ AÑADIR LIADO</button>';
+      }
+      else if (sec.tipo === 'munchies') {
+        html = `<h3 style="color: ${color.color}; margin-bottom: 20px;">${sec.icono} ${sec.nombre} - BEBIDAS</h3><div class="admin-grid">`;
+        sec.sub.bebidas.forEach((item, i) => {
+          html += `
+            <div class="admin-card" style="border-color: ${color.color};">
+              <input type="text" id="bebida-nombre-${sec.id}-${i}" value="${escapeHtml(item.nombre)}" class="admin-input" placeholder="Nombre" onchange="actualizarMunchi('${sec.id}', 'bebidas', ${i}, 'nombre', this.value)">
+              <input type="text" id="bebida-precio-${sec.id}-${i}" value="${item.precio}" class="admin-precio" style="border-color: ${color.color}; color: ${color.color};" placeholder="Precio" onchange="actualizarMunchi('${sec.id}', 'bebidas', ${i}, 'precio', this.value)">
+              <button onclick="eliminarMunchiItem('${sec.id}', 'bebidas', ${i})" class="admin-btn btn-delete">🗑️ ELIMINAR</button>
+            </div>
+          `;
+        });
+        html += '</div><button onclick="añadirMunchiItem(\'' + sec.id + '\', \'bebidas\')" style="width:100%; background: ' + color.color + '; border: 2px solid white; border-radius:30px; padding:15px; font-size:1.8rem; margin-top:10px; color:white; font-weight:bold; cursor:pointer;">➕ AÑADIR BEBIDA</button>';
+        
+        html += `<h3 style="color: ${color.color}; margin-top: 30px; margin-bottom: 20px;">${sec.icono} ${sec.nombre} - PARA PICAR</h3><div class="admin-grid">`;
+        sec.sub.picar.forEach((item, i) => {
+          html += `
+            <div class="admin-card" style="border-color: ${color.color};">
+              <input type="text" id="picar-nombre-${sec.id}-${i}" value="${escapeHtml(item.nombre)}" class="admin-input" placeholder="Nombre" onchange="actualizarMunchi('${sec.id}', 'picar', ${i}, 'nombre', this.value)">
+              <input type="text" id="picar-precio-${sec.id}-${i}" value="${item.precio}" class="admin-precio" style="border-color: ${color.color}; color: ${color.color};" placeholder="Precio" onchange="actualizarMunchi('${sec.id}', 'picar', ${i}, 'precio', this.value)">
+              <button onclick="eliminarMunchiItem('${sec.id}', 'picar', ${i})" class="admin-btn btn-delete">🗑️ ELIMINAR</button>
+            </div>
+          `;
+        });
+        html += '</div><button onclick="añadirMunchiItem(\'' + sec.id + '\', \'picar\')" style="width:100%; background: ' + color.color + '; border: 2px solid white; border-radius:30px; padding:15px; font-size:1.8rem; margin-top:10px; color:white; font-weight:bold; cursor:pointer;">➕ AÑADIR PRODUCTO</button>';
+      }
+      else if (sec.tipo === 'eventos') {
+        html = `<h3 style="color: ${color.color}; margin-bottom: 20px;">${sec.icono} ${sec.nombre}</h3><div class="admin-grid">`;
+        sec.items.forEach((img, i) => {
+          html += `
+            <div class="admin-card" style="border-color: ${color.color};">
+              <img src="${resolverImagen(img)}" id="evento-img-${sec.id}-${i}" class="admin-img" style="border-color: ${color.color};">
+              <input type="file" id="evento-file-${sec.id}-${i}" accept="image/*" class="admin-file-input" onchange="subirImagenEvento('${sec.id}', ${i})">
+              <button onclick="document.getElementById('evento-file-${sec.id}-${i}').click()" class="admin-btn btn-upload" style="border-color: ${color.color};">📷 CAMBIAR FOTO</button>
+              <button onclick="eliminarEvento('${sec.id}', ${i})" class="admin-btn btn-delete">🗑️ ELIMINAR CARTEL</button>
+            </div>
+          `;
+        });
+        html += '</div><button onclick="añadirEventoItem(\'' + sec.id + '\')" style="width:100%; background: ' + color.color + '; border: 2px solid white; border-radius:30px; padding:15px; font-size:1.8rem; margin-top:10px; color:white; font-weight:bold; cursor:pointer; box-shadow: 0 0 15px ' + color.color + ';">➕ AÑADIR NUEVO CARTEL</button>';
+      }
+      
+      document.getElementById('admin-contenido').innerHTML = html;
+      anadirControlesOrden(sec.id);
+    }
+
+    function actualizarProducto(secId, index, campo, valor) {
+      const sec = secciones.find(s => s.id === secId);
+      if (sec && sec.items[index]) {
+        sec.items[index][campo] = valor;
+        guardarCompleto();
+        renderizarTodo();
+        mostrarSeccionAdmin(secId);
+      }
+    }
+
+    function añadirProductoItem(secId) {
+      const sec = secciones.find(s => s.id === secId);
+      if (sec) {
+        if (sec.tipo === 'productos') {
+          sec.items.push({ img: crearImagenPlaceholder(), nombre: 'NUEVO PRODUCTO', precio: '0' });
+        } else if (sec.tipo === 'liados') {
+          sec.items.push({ nombre: 'NUEVO LIADO', precio: '0' });
+        }
+        guardarCompleto();
+        renderizarTodo();
+        mostrarSeccionAdmin(secId);
+      }
+    }
+
+    function eliminarProductoItem(secId, index) {
+      if (!confirm('¿Eliminar este producto?')) return;
+      const sec = secciones.find(s => s.id === secId);
+      if (sec && sec.items[index]) {
+        sec.items.splice(index, 1);
+        guardarCompleto();
+        renderizarTodo();
+        mostrarSeccionAdmin(secId);
+      }
+    }
+
+    function actualizarMunchi(secId, subTipo, index, campo, valor) {
+      const sec = secciones.find(s => s.id === secId);
+      if (sec && sec.sub[subTipo][index]) {
+        sec.sub[subTipo][index][campo] = valor;
+        guardarCompleto();
+        renderizarTodo();
+        mostrarSeccionAdmin(secId);
+      }
+    }
+
+    function añadirMunchiItem(secId, subTipo) {
+      const sec = secciones.find(s => s.id === secId);
+      if (sec) {
+        sec.sub[subTipo].push({ nombre: 'NUEVO PRODUCTO', precio: '0' });
+        guardarCompleto();
+        renderizarTodo();
+        mostrarSeccionAdmin(secId);
+      }
+    }
+
+    function eliminarMunchiItem(secId, subTipo, index) {
+      if (!confirm('¿Eliminar este producto?')) return;
+      const sec = secciones.find(s => s.id === secId);
+      if (sec && sec.sub[subTipo][index]) {
+        sec.sub[subTipo].splice(index, 1);
+        guardarCompleto();
+        renderizarTodo();
+        mostrarSeccionAdmin(secId);
+      }
+    }
+
+    function añadirEventoItem(secId) {
+      const sec = secciones.find(s => s.id === secId);
+      if (sec) {
+        sec.items.push(crearImagenPlaceholder());
+        guardarCompleto();
+        renderizarTodo();
+        mostrarSeccionAdmin(secId);
+      }
+    }
+
+    async function subirImagenProducto(secId, index) {
+      const input = document.getElementById(`file-${secId}-${index}`);
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const imgComprimida = await comprimirImagen(e.target.result);
+          const sec = secciones.find(s => s.id === secId);
+          if (sec && sec.items[index]) {
+            sec.items[index].img = await CatalogoFirebase.guardarImagen(imgComprimida);
+            try { await guardarCompleto(); renderizarTodo(); mostrarSeccionAdmin(secId); } catch(err) { mostrarErrorGuardado(err); }
+          }
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    async function subirImagenEvento(secId, index) {
+      const input = document.getElementById(`evento-file-${secId}-${index}`);
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const imgComprimida = await comprimirImagen(e.target.result, 0.7, 800);
+          const sec = secciones.find(s => s.id === secId);
+          if (sec && sec.items[index]) {
+            sec.items[index] = await CatalogoFirebase.guardarImagen(imgComprimida);
+            try { await guardarCompleto(); renderizarTodo(); mostrarSeccionAdmin(secId); } catch(err) { mostrarErrorGuardado(err); }
+          }
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function comprimirImagen(dataUrl, calidad = 0.7, maxAncho = 400) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let ancho = img.width;
+          let alto = img.height;
+          if (ancho > maxAncho) {
+            alto = (maxAncho / ancho) * alto;
+            ancho = maxAncho;
+          }
+          canvas.width = ancho;
+          canvas.height = alto;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, ancho, alto);
+          resolve(canvas.toDataURL('image/jpeg', calidad));
+        };
+        img.src = dataUrl;
+      });
+    }
+
+    async function guardarTodo() {
+      try { await guardarCompleto(); alert('✅ Todos los cambios guardados en Firebase'); }
+      catch(err){ mostrarErrorGuardado(err); }
+    }
+
+    function iniciarDrag(e, index, secId) {
+      draggedIndex = index;
+      currentSecId = secId;
+      e.dataTransfer.setData('text/plain', index);
+      const card = e.target.closest('.admin-card');
+      if(card) card.classList.add('dragging');
+    }
+
+    function finalizarDrag(e) {
+      const card = e.target.closest('.admin-card');
+      if(card) card.classList.remove('dragging');
+      draggedIndex = null;
+      currentSecId = null;
+    }
+
+    function permitirDrop(e) { e.preventDefault(); }
+
+    function soltarDrop(e, targetIndex, secId) {
+      e.preventDefault();
+      if (draggedIndex !== null && currentSecId === secId && draggedIndex !== targetIndex) {
+        const sec = secciones.find(s => s.id === secId);
+        if (sec && sec.items) {
+          const [movedItem] = sec.items.splice(draggedIndex, 1);
+          sec.items.splice(targetIndex, 0, movedItem);
+          guardarCompleto();
+          renderizarTodo();
+          mostrarSeccionAdmin(secId);
+        }
+      }
+      document.querySelectorAll('.admin-card').forEach(card => {
+        card.classList.remove('drag-over', 'dragging');
+      });
+    }
+
+    function marcarSobreDrop(e) {
+      e.preventDefault();
+      const targetCard = e.target.closest('.admin-card');
+      if (targetCard) {
+        document.querySelectorAll('.admin-card').forEach(card => card.classList.remove('drag-over'));
+        targetCard.classList.add('drag-over');
+      }
+    }
+
+    function limpiarMarcador(e) {
+      const targetCard = e.target.closest('.admin-card');
+      if (targetCard) targetCard.classList.remove('drag-over');
+    }
+
+    window.addEventListener('load', () => { prepararPredeterminados(); CatalogoFirebase.observarAutenticacion(async usuario => { if(usuario){document.getElementById('panel-login').style.display='none';document.getElementById('panel-admin').style.display='block';document.body.classList.add('admin-mode');await cargarDatos();renderAdminUI();}else{document.getElementById('panel-admin').style.display='none';document.getElementById('panel-login').style.display='flex';}}); });
+  </script>
+</body>
+</html>
